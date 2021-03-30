@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jenkins-deployment
+spec:
+  template:
+    metadata:
+      name: jenkins-deployment
+      labels:
+        app: jenkins-deployment
+    spec:
+      containers:
+        - name: jenkins-container
+          image: gnachaves/jenkins:v3
+          ports:
+          - containerPort: 8080
+          volumeMounts:
+          - name: jenkins-persistent-storage
+            mountPath: /var/jenkins_home
+      volumes:
+      - name: jenkins-persistent-storage
+        persistentVolumeClaim:
+          claimName: jenkins-pvc-storage
+  selector:
+    matchLabels:
+      app: jenkins-deployment
